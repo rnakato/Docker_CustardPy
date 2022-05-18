@@ -1,6 +1,7 @@
 # CustardPy_Juicer
 
-A docker image for Juicer analysis in CustardPy. Docker image is at: https://hub.docker.com/repository/docker/rnakato/custardpy_juicer/general
+A docker image for Juicer analysis in CustardPy, based on [aidenlab/juicer](https://hub.docker.com/r/aidenlab/juicer)
+Docker image is at: https://hub.docker.com/repository/docker/rnakato/custardpy_juicer/general
 
 ## Run
 
@@ -88,12 +89,12 @@ The whole commands using the Singularity image (`rnakato_juicer.sif`) are as fol
 ## Build Docker image from Dockerfile
 First clone and move to the repository
 
-    git clone https://github.com/rnakato/docker_juicer.git
+    git clone https://github.com/rnakato/CustardPy_Juicer.git
     cd docker_juicer
 
 Then type:
 
-    docker build -t <account>/juicer .
+    docker build -f Dokerfile.<version> -t <account>/custardpy_juicer .
 
 ## Contact
 

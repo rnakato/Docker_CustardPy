@@ -8,7 +8,7 @@ Docker image is at: https://hub.docker.com/repository/docker/rnakato/custardpy_j
 For Docker:
 
     # pull docker image
-    docker pull rnakato/juicer
+    docker pull rnakato/custardpy_juicer 
 
     # container login
     docker run [--gpus all] --rm -it rnakato/custardpy_juicer /bin/bash

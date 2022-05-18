@@ -90,7 +90,7 @@ The whole commands using the Singularity image (`rnakato_juicer.sif`) are as fol
 First clone and move to the repository
 
     git clone https://github.com/rnakato/CustardPy_Juicer.git
-    cd docker_juicer
+    cd CustardPy_Juicer
 
 Then type:
 

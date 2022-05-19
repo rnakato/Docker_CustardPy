@@ -1,6 +1,8 @@
 # CustardPy_Juicer
 
-A docker image for Juicer analysis in CustardPy, based on [aidenlab/juicer](https://hub.docker.com/r/aidenlab/juicer)
+A docker image for Juicer analysis in CustardPy, based on [aidenlab/juicer](https://hub.docker.com/r/aidenlab/juicer).
+This repository is the newer version of [docker_juicer](https://github.com/rnakato/docker_juicer).
+
 Docker image is at: https://hub.docker.com/repository/docker/rnakato/custardpy_juicer/general
 
 ## Run

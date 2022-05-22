@@ -18,6 +18,7 @@ RUN apt-get update \
      gcc \
      git \
      libbz2-dev \
+     libcurl4-gnutls-dev \
      libz-dev \
      locales \
      make \
@@ -47,6 +48,7 @@ RUN wget --quiet https://repo.anaconda.com/archive/Anaconda3-2020.11-Linux-x86_6
 RUN pip install numpy pandas scipy matplotlib argparse seaborn \
     && conda install -y r-base \
     && conda install -c r r-ggplot2 r-reshape2
+RUN pip install hic-straw phic
 
 #RUN R -e "install.packages(c('ggplot2','reshape2','devtools'), repos='https://cran.ism.ac.jp/')"
 
@@ -63,6 +65,9 @@ ADD scripts scripts
 
 # Install Juicer tools
 ADD juicer_tools.2.13.07.jar /opt/juicer/scripts/common/juicer_tools.jar
+
+# JuiceBox
+RUN pip install git+https://github.com/igvteam/juicebox-notebook.git
 
 COPY bedtools /usr/local/bin/bedtools
 RUN chmod +x scripts/* /usr/local/bin/bedtools /opt/juicer/scripts/common/* /opt/juicer/scripts/*

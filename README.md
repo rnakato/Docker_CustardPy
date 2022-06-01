@@ -32,19 +32,20 @@ For Singularity:
 
 ### juicer_map.sh: generate .hic file from fastq
 
-    juicer_map.sh [options] <odir> <build> <fastqdir> <enzyme> <fastq_post [_|_R]>
-    <odir>: output directory (e.g., "JuicerResults/sample1")
-    <build>: genome build
+    juicer_map.sh [options] fastqdir> <odir> <build> <gt> <bwaindex> <fastq_post>
     <fastqdir>: directory that contains input fastq files (e.g., "fastq/sample1")
-    <enzyme>: enzyme name (e.g., "HindIII", "MboI")
+    <odir>: output directory (e.g., "JuicerResults/sample1")
+    <build>: genome build (e.g., hg38)
+    <gt>: genome table
+    <bwaindex>: index file of BWA
     <fastq_post (_|_R)>: if the filename of fastqs is *_[1|2].fastq, supply "_". if *_[R1|R2].fastq, choose "_R".
     
     Options:
-        -d Datadir
-        -m tmpdir
-        -p ncore: number of CPUs
-
-The BWA index files should be at `/work/Database/bwa-indexes/UCSC-$build`.
+        -e enzyme: enzyme (default: HindIII)
+        -p ncore: number of CPUs (default: 32)
+        -m tmpdir: tempdir
+    Example:
+      juicer_map.sh $(pwd)/fastq/Hap1-A/ $(pwd)/JuicerResults/Hap1-A hg38 genometable.hg38.txt bwaindex/hg38 _R 
 
 Note that the fastq files of each sample should be stored in the separated directory. For example, if there are three Hi-C samples (`sample1`, `sample2`, and `sample3`), The fastq files should be in `fastq/sample1`,  `fastq/sample2`, and `fastq/sample3`. 
 The input fastq files can be gzipped (.fastq.gz).

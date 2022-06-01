@@ -61,13 +61,11 @@ This command is optional.
 Note that some commands provided Juicer that uses the intermediate files (e.g, mega.sh) does not accept the compressed format. 
 The compressed files can be uncompressed by `juicer_unpigz.sh <odir>`.
 
-
 ### plot_distance_count.sh: calculte the fragment distance
 
      plot_distance_count.sh <label> <odir>
      <label>: title of the figure
      <odir> output directory of juicer_map.sh (e.g., "JuicerResults/sample1")
-
 
 ### call_HiCCUPS.sh: call loops using HiCCUPS
 

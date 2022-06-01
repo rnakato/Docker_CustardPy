@@ -2,16 +2,25 @@
 cmdname=`basename $0`
 function usage()
 {
-    echo "$cmdname [-d Datadir] [-m tmpdir] [-p ncore] <odir> <build> <fastqdir> <enzyme> <fastq_post [_|_R]>" 1>&2
-    echo '   Example: $cmdname $(pwd)/JuicerResults/Hap1-A hg38 $(pwd)/fastq/Hap1-A/ MboI _R' 1>&2
+    echo "$cmdname [-e enzyme] [-m tmpdir] [-p ncore] <fastqdir> <odir> <build> <gt> <bwaindex> <enzyme> <fastq_post>" 1>&2
+    echo '   <fastqdir>: directory that contains input fastq files (e.g., "fastq/sample1")' 1>&2
+    echo '   <odir>: output directory (e.g., "JuicerResults/sample1")' 1>&2
+    echo '   <build>: genome build (e.g., hg38)' 1>&2
+    echo '   <gt>: genome table' 1>&2
+    echo '   <bwaindex>: index file of BWA' 1>&2
+    echo '   <enzyme>: enzyme' 1>&2
+    echo '   <fastq_post [_|_R]>: if the filename of fastqs is *_[1|2].fastq, supply "_". if *_[R1|R2].fastq, choose "_R".' 1>&2
+    echo '   Options:' 1>&2
+    echo '      -p ncore: number of CPUs (default: 32)' 1>&2
+    echo '      -m tmpdir: tempdir' 1>&2
+    echo '   Example:' 1>&2
+    echo "      $cmdname $(pwd)/fastq/Hap1-A/ $(pwd)/JuicerResults/Hap1-A hg38 genometable.hg38.txt bwaindex/hg38 _R" 1>&2
 }
 
 tmpdir=""
 ncore=32
-Datadir=/work/Database
-while getopts d:p:m: option; do
+while getopts p:m: option; do
     case ${option} in
-        d) Datadir=${OPTARG} ;;
         p) ncore=${OPTARG} ;;
         m) tmpdir=${OPTARG} ;;
         *)
@@ -22,21 +31,21 @@ while getopts d:p:m: option; do
 done
 shift $((OPTIND - 1))
 
-if [ $# -ne 5 ]; then
+if [ $# -ne 7 ]; then
   usage
   exit 1
 fi
 
-odir=$1
+fqdir=$1
+odir=$2
 label=$(basename $odir)
-build=$2
-fqdir=$3
-enzyme=$4
-fastq_post=$5
+build=$3
+gt=$4
+bwaindex=$5
+enzyme=$6
+fastq_post=$7
 
 jdir=/opt/juicer
-gt=$Datadir/UCSC/$build/genome_table
-bwaindex=$Datadir/bwa-indexes/UCSC-$build
 
 if [ -n "$tmpdir" ]; then
   param="-p $tmpdir"

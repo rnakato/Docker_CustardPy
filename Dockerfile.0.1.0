@@ -59,20 +59,20 @@ RUN echo 'alias awk=gawk' >> ~/.bashrc
 RUN locale-gen en_US.UTF-8
 
 # Install Juicer
-ADD Juicebox.jar .
-ADD juicer-1.6 juicer
-ADD scripts scripts
+COPY juicer-1.6 /opt/juicer
 
 # Install Juicer tools
-ADD juicer_tools.2.13.07.jar /opt/juicer/scripts/common/juicer_tools.jar
+COPY juicer_tools.2.13.07.jar /opt/juicer/scripts/common/juicer_tools.jar
 
 # JuiceBox
+COPY Juicebox.jar /opt/Juicebox.jar
 RUN pip install git+https://github.com/igvteam/juicebox-notebook.git
 
 COPY motiffiles motiffiles
 RUN unpigz /opt/motiffiles/*gz
 COPY juicer_tools.1.9.9_jcuda.0.8.jar /opt/juicer_tools.1.9.9_jcuda.0.8.jar
 
+COPY scripts /opt/scripts
 COPY bedtools /usr/local/bin/bedtools
 RUN chmod +x scripts/* /usr/local/bin/bedtools /opt/juicer/scripts/common/* /opt/juicer/scripts/*
 

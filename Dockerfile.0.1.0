@@ -69,6 +69,9 @@ ADD juicer_tools.2.13.07.jar /opt/juicer/scripts/common/juicer_tools.jar
 # JuiceBox
 RUN pip install git+https://github.com/igvteam/juicebox-notebook.git
 
+COPY motiffiles motiffiles
+RUN unpigz /opt/motiffiles/*gz
+
 COPY bedtools /usr/local/bin/bedtools
 RUN chmod +x scripts/* /usr/local/bin/bedtools /opt/juicer/scripts/common/* /opt/juicer/scripts/*
 

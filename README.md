@@ -32,17 +32,42 @@ For Singularity:
 
 ### juicer_map.sh: generate .hic file from fastq
 
-    juicer_map.sh [-m $tmpdir] $odir $build $fqdir $enzyme $fastq_post
-    <odir>: output directory (e.g., "JuicerResults")
+    juicer_map.sh [options] <odir> <build> <fastqdir> <enzyme> <fastq_post [_|_R]>
+    <odir>: output directory (e.g., "JuicerResults/sample1")
     <build>: genome build
-    <fqdir>: directory that contains input fastq files (e.g., "fastq/sample1")
+    <fastqdir>: directory that contains input fastq files (e.g., "fastq/sample1")
     <enzyme>: enzyme name (e.g., "HindIII", "MboI")
-
-Note that the fastq files of each sample should be stored in the separated directory. For example, if there are three Hi-C samples (`sample1`, `sample2`, and `sample3`), The fastq files should be in `fastq/sample1`,  `fastq/sample2`, and `fastq/sample3`. Then the mapping results including the .hic file is outputted in `JuicerResults/sample1`.
-
-The outputs are stored in `JuicerResults/$cell`.
+    <fastq_post (_|_R)>: if the filename of fastqs is *_[1|2].fastq, supply "_". if *_[R1|R2].fastq, choose "_R".
+    
+    Options:
+        -d Datadir
+        -m tmpdir
+        -p ncore: number of CPUs
 
 The BWA index files should be at `/work/Database/bwa-indexes/UCSC-$build`.
+
+Note that the fastq files of each sample should be stored in the separated directory. For example, if there are three Hi-C samples (`sample1`, `sample2`, and `sample3`), The fastq files should be in `fastq/sample1`,  `fastq/sample2`, and `fastq/sample3`. 
+The input fastq files can be gzipped (.fastq.gz).
+Then the mapping results including the .hic file is outputted in `$odir`.
+
+### (Optional) juicer_pigz.sh: gzip intermediate files
+
+The output of Juicer is quite large, we provide script for compresssing them.
+This command is optional.
+
+     juicer_pigz.sh <odir>
+     <odir> output directory of juicer_map.sh (e.g., "JuicerResults/sample1")
+
+Note that some commands provided Juicer that uses the intermediate files (e.g, mega.sh) does not accept the compressed format. 
+The compressed files can be uncompressed by `juicer_unpigz.sh <odir>`.
+
+
+### plot_distance_count.sh: calculte the fragment distance
+
+     plot_distance_count.sh <label> <odir>
+     <label>: title of the figure
+     <odir> output directory of juicer_map.sh (e.g., "JuicerResults/sample1")
+
 
 ### call_HiCCUPS.sh: call loops using HiCCUPS
 

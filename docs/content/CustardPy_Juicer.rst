@@ -2,7 +2,7 @@ CustardPy_Juicer
 =====================
 
 **CustardPy_Juicer** is a docker image for Juicer analysis in `CustardPy <https://github.com/rnakato/Custardpy>`_.
-This is a wrapper of `Juicer <https://github.com/aidenlab/juicer/wiki>`_ and internally executes `juicertools <https://github.com/aidenlab/juicer/wiki/Feature-Annotation>`_. 
+This is a wrapper of `Juicer <https://github.com/aidenlab/juicer/wiki>`_ and internally executes `juicertools <https://github.com/aidenlab/juicer/wiki/Feature-Annotation>`_.
 See the original website for the full description about each command.
 
 juicer_map.sh
@@ -22,24 +22,24 @@ Because this command uses `BWA <http://bio-bwa.sourceforge.net/>`_ for read mapp
       <gt>: genome table
       <bwaindex>: index file of BWA
       <fastq_post (_|_R)>: if the filename of fastqs is *_[1|2].fastq, supply "_". if *_[R1|R2].fastq, choose "_R".
-    
+
     Options:
         -e enzyme: enzyme (default: HindIII)
         -p ncore: number of CPUs (default: 32)
         -m tmpdir: tempdir
     Example:
-      juicer_map.sh $(pwd)/fastq/Hap1-A/ $(pwd)/JuicerResults/Hap1-A hg38 genometable.hg38.txt bwaindex/hg38 _R 
+      juicer_map.sh $(pwd)/fastq/Hap1-A/ $(pwd)/JuicerResults/Hap1-A hg38 genometable.hg38.txt bwaindex/hg38 _R
 
 
 .. note::
 
     The input fastq files of each sample should be stored in the separated directory.
-    For example, if there are three Hi-C samples (``sample1``, ``sample2``, and ``sample3``), the fastq files should be in ``fastq/sample1/``,  ``fastq/sample2/``, and ``fastq/sample3/``. 
+    For example, if there are three Hi-C samples (``sample1``, ``sample2``, and ``sample3``), the fastq files should be in ``fastq/sample1/``,  ``fastq/sample2/``, and ``fastq/sample3/``.
 
 (Optional) juicer_pigz.sh
 -----------------------------------------------------------------
 
-The output of Juicer is quite large, we provide a script ``juicer_pigz.sh`` that compresses the intermediate files. 
+The output of Juicer is quite large, we provide a script ``juicer_pigz.sh`` that compresses the intermediate files.
 This command is optional.
 
 .. code-block:: bash
@@ -47,7 +47,7 @@ This command is optional.
      juicer_pigz.sh <odir>
        <odir> output directory of juicer_map.sh (e.g., "JuicerResults/sample1")
 
-Note that some commands provided in Juicer use the intermediate files (e.g, mega.sh). 
+Note that some commands provided in Juicer use the intermediate files (e.g, mega.sh).
 Because these commands do not accept the compressed format, use ``juicer_unpigz.sh`` that uncompresses the compressed files.
 
 .. code-block:: bash
@@ -70,12 +70,12 @@ plot_distance_count.sh
 call_HiCCUPS.sh
 ----------------------------------------------------------------
 
-``call_HiCCUPS.sh`` call loops using Juicer HiCCUPS. 
+``call_HiCCUPS.sh`` call loops using Juicer HiCCUPS.
 This command needs GPU. Supply ``--nv`` option to the singularity command as follows:
 
 .. code-block:: bash
 
-    singularity exec --nv custardpy_juicer.sif call_HiCCUPS.sh 
+    singularity exec --nv custardpy_juicer.sif call_HiCCUPS.sh
 
     call_HiCCUPS.sh $norm $odir $hic $build
       <norm>: normalization (NONE|VC|VC_SQRT|KR|SCALE)
@@ -101,6 +101,10 @@ Output:
 * merged_loops_with_motifs.bedpe
 
 See `MotifFinder manual <https://github.com/aidenlab/juicer/wiki/MotifFinder>`_ for more information.
+
+.. note ::
+
+    Because of the version-dependent error, ``CustardPy`` uses ``juicer_tools.1.9.9_jcuda.0.8.jar`` for MotifFinder.
 
 
 Full command example
@@ -166,4 +170,3 @@ The whole commands using the Singularity image (``rnakato_juicer.sif``) are as f
         # motif analysis
         $sing juicertools.sh motifs $build $motifdir $odir/loops/$norm/merged_loops.bedpe hg38.motifs.txt
     done
-

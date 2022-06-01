@@ -71,6 +71,7 @@ RUN pip install git+https://github.com/igvteam/juicebox-notebook.git
 
 COPY motiffiles motiffiles
 RUN unpigz /opt/motiffiles/*gz
+COPY juicer_tools.1.9.9_jcuda.0.8.jar /opt/juicer_tools.1.9.9_jcuda.0.8.jar
 
 COPY bedtools /usr/local/bin/bedtools
 RUN chmod +x scripts/* /usr/local/bin/bedtools /opt/juicer/scripts/common/* /opt/juicer/scripts/*

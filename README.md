@@ -1,11 +1,13 @@
 # CustardPy_Juicer
 
-A docker image for Juicer analysis in [CustardPy](https://github.com/rnakato/Custardpy).
-The Dockerfile is based on [aidenlab/juicer](https://hub.docker.com/r/aidenlab/juicer).
+**CustardPy_Juicer** is a docker image for Juicer analysis in [CustardPy](https://github.com/rnakato/Custardpy).
+This is a wrapper of [Juicer](https://github.com/aidenlab/juicer/wiki) and internally executes juicertools. 
 
-This repository is the newer version of [docker_juicer](https://github.com/rnakato/docker_juicer).
+## Related links
 
-Docker image is at: https://hub.docker.com/repository/docker/rnakato/custardpy_juicer/general
+- The Dockerfile of **CustardPy_Juicer** is based on [aidenlab/juicer](https://hub.docker.com/r/aidenlab/juicer).
+- **CustardPy_Juicer** is the newer version of [docker_juicer](https://github.com/rnakato/docker_juicer).
+- Docker image of **CustardPy_Juicer** is available at: https://hub.docker.com/repository/docker/rnakato/custardpy_juicer/general
 
 ## Run
 
@@ -30,8 +32,26 @@ For Singularity:
 
 These scripts assume that the fastq files are stored in `fastq/$cell` (e.g., `fastq/Control_1`).
 The outputs are stored in `JuicerResults/$cell`.
-
 The BWA index files should be at `/work/Database/bwa-indexes/UCSC-$build`.
+
+### call_MotifFinder.sh: execute MotifFinder
+
+If you have peak files of cohesin and CTCF, you can use MotifFinder:
+
+    call_MotifFinder.sh $build $motifdir $loop
+    <build>: genome build
+    <motifdir>: the directory that contains the BED files
+    <loop>: loop file (.bedpe) obtained by HiCCUPS
+
+If the $build is (hg19|hg38|mm9|mm10), this command automatically supplies [FIMO](http://meme-suite.org/doc/fimo.html) motifs provided by Juicer.
+
+Output:
+* merged_loops_with_motifs.bedpe
+
+See [MotifFinder manual](https://github.com/aidenlab/juicer/wiki/MotifFinder) for more information.
+
+
+### Full commands example
 
 The whole commands using the Singularity image (`rnakato_juicer.sif`) are as follows:
 

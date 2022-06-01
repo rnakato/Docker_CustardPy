@@ -4,6 +4,7 @@ CustardPy
 
 **CustardPy** is a Hi-C analysis tools by Python3 and Docker.
 
+
 Contents:
 ---------------
 
@@ -13,6 +14,7 @@ Contents:
    :maxdepth: 1
 
    content/Install
+   content/QuickStart
    content/CustardPy_Juicer
    content/Visualization
 

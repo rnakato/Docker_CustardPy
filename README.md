@@ -1,7 +1,7 @@
 # CustardPy_Juicer
 
 **CustardPy_Juicer** is a docker image for Juicer analysis in [CustardPy](https://github.com/rnakato/Custardpy).
-This is a wrapper of [Juicer](https://github.com/aidenlab/juicer/wiki) and internally executes juicertools. 
+This is a wrapper of [Juicer](https://github.com/aidenlab/juicer/wiki) and internally executes juicertools. See the original website for the full description about each command.
 
 ## Related links
 
@@ -30,9 +30,31 @@ For Singularity:
 
 ## Usage
 
-These scripts assume that the fastq files are stored in `fastq/$cell` (e.g., `fastq/Control_1`).
+### juicer_map.sh: generate .hic file from fastq
+
+    juicer_map.sh [-m $tmpdir] $odir $build $fqdir $enzyme $fastq_post
+    <odir>: output directory (e.g., "JuicerResults")
+    <build>: genome build
+    <fqdir>: directory that contains input fastq files (e.g., "fastq/sample1")
+    <enzyme>: enzyme name (e.g., "HindIII", "MboI")
+
+Note that the fastq files of each sample should be stored in the separated directory. For example, if there are three Hi-C samples (`sample1`, `sample2`, and `sample3`), The fastq files should be in `fastq/sample1`,  `fastq/sample2`, and `fastq/sample3`. Then the mapping results including the .hic file is outputted in `JuicerResults/sample1`.
+
 The outputs are stored in `JuicerResults/$cell`.
+
 The BWA index files should be at `/work/Database/bwa-indexes/UCSC-$build`.
+
+### call_HiCCUPS.sh: call loops using HiCCUPS
+
+This command needs GPU. Supply `--nv` option to the singularity command as follows:
+
+    singularity exec --nv custardpy_juicer.sif call_HiCCUPS.sh 
+
+    call_HiCCUPS.sh $norm $odir $hic $build
+    <norm>: normalization (NONE|VC|VC_SQRT|KR|SCALE)
+    <odir>: output directory
+    <hic>: .hic file
+    <build>: genome build
 
 ### call_MotifFinder.sh: execute MotifFinder
 
@@ -51,7 +73,11 @@ Output:
 See [MotifFinder manual](https://github.com/aidenlab/juicer/wiki/MotifFinder) for more information.
 
 
-### Full commands example
+### Full command example
+
+These scripts assume that the fastq files are stored in `fastq/$cell` (e.g., `fastq/Control_1`).
+The outputs are stored in `JuicerResults/$cell`.
+The BWA index files should be at `/work/Database/bwa-indexes/UCSC-$build`.
 
 The whole commands using the Singularity image (`rnakato_juicer.sif`) are as follows:
 

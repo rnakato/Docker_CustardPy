@@ -2,7 +2,11 @@
 cmdname=`basename $0`
 function usage()
 {
-    echo "$cmdname <norm> <matrixdir> <binsize> <genometable>" 1>&2
+    echo "$cmdname <norm> <odir> <resolution> <gt>" 1>&2
+    echo '   <norm>: normalization type (NONE|VC|VC_SQRT|KR|SCALE)' 1>&2
+    echo '   <odir>: output directory (e.g., "JuicerResults/sample1")' 1>&2
+    echo '   <resolution>: resolution of the matrix' 1>&2
+    echo '   <gt>: genome table' 1>&2
 }
 
 if [ $# -ne 4 ]; then

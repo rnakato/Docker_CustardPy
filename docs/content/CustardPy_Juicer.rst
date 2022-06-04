@@ -133,6 +133,16 @@ makeMatrix_inter.sh
 The resulting observed/oe matrices are output in ``<odir>/Matrix/interchromosomal/<resolution>/<chr1>-<chr2>``.
 
 
+makeEigen.sh
+----------------------------------------------------------------
+
+Generate eigenvector file in that +- of the value is adjusted by the number of genes
+
+.. code-block:: bash
+
+     makeEigen.sh <normalize type (e.g. KR)> <output directory> <.hic> <resolution> <build (r.g., hg38)>
+
+
 makeInslationScore.sh
 ----------------------------------------------------------------
 

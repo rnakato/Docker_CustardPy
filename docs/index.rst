@@ -17,6 +17,7 @@ Contents:
    content/QuickStart
    content/CustardPy_Juicer
    content/Visualization
+   content/Utils
 
 
 Citation:

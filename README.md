@@ -30,7 +30,7 @@ For Singularity:
 
 ## Usage
 
-See [Custardpy Manual](https://custardpy-juicer.readthedocs.io/en/latest/index.html).
+See [Custardpy Manual](https://custardpy.readthedocs.io/en/latest/).
 
 ## Build Docker image from Dockerfile
 First clone and move to the repository

@@ -1,6 +1,6 @@
 # CustardPy_Juicer
 
-**CustardPy_Juicer** is a docker image for Juicer analysis in [CustardPy](https://github.com/rnakato/Custardpy).
+**CustardPy_Juicer** is a docker image for Juicer analysis in [CustardPy](https://github.com/rnakato/CustardPy).
 This is a wrapper of [Juicer](https://github.com/aidenlab/juicer/wiki) and internally executes juicertools. See the original website for the full description about each command.
 
 ## Related links

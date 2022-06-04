@@ -7,7 +7,7 @@ This is a wrapper of [Juicer](https://github.com/aidenlab/juicer/wiki) and inter
 
 - The Dockerfile of **CustardPy_Juicer** is based on [aidenlab/juicer](https://hub.docker.com/r/aidenlab/juicer).
 - **CustardPy_Juicer** is the newer version of [docker_juicer](https://github.com/rnakato/docker_juicer).
-- Docker image of **CustardPy_Juicer** is available at [DockerHub](https://hub.docker.com/repository/docker/rnakato/custardpy_juicer/general).
+- Docker image of **CustardPy_Juicer** is available at [DockerHub](https://hub.docker.com/r/rnakato/custardpy_juicer).
 
 ## Run
 

@@ -45,10 +45,10 @@ RUN wget --quiet https://repo.anaconda.com/archive/Anaconda3-2020.11-Linux-x86_6
      && rm ~/anaconda.sh \
      && ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh
 
-RUN pip install numpy pandas scipy matplotlib argparse seaborn \
+RUN pip install --no-cache-dir numpy pandas scipy matplotlib argparse seaborn \
     && conda install -y r-base \
     && conda install -c r r-ggplot2 r-reshape2
-RUN pip install hic-straw phic
+RUN pip install --no-cache-dir hic-straw phic
 
 #RUN R -e "install.packages(c('ggplot2','reshape2','devtools'), repos='https://cran.ism.ac.jp/')"
 
@@ -66,7 +66,7 @@ COPY juicer_tools.2.13.07.jar /opt/juicer/scripts/common/juicer_tools.jar
 
 # JuiceBox
 COPY Juicebox.jar /opt/Juicebox.jar
-RUN pip install git+https://github.com/igvteam/juicebox-notebook.git
+RUN pip install --no-cache-dir git+https://github.com/igvteam/juicebox-notebook.git
 
 COPY motiffiles motiffiles
 RUN unpigz /opt/motiffiles/*gz

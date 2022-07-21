@@ -51,11 +51,23 @@ if [ -n "$tmpdir" ]; then
   param="-p $tmpdir"
 fi
 
+if [[ ${fqdir} =~ ^/.+$ ]]; then
+    $fqdir=$fqdir
+else
+    fqdir=$(pwd)/$fqdir
+fi
+
+if [[ ${odir} =~ ^/.+$ ]]; then
+    $odir=$odir
+else
+    odir=$(pwd)/$odir
+fi
+
 ex(){ echo $1; eval $1; }
 
 pwd=`pwd`
 ex "mkdir -p $odir"
-ex "if test ! -e $odir/fastq; then ln -s $(pwd)/$fqdir $odir/fastq; fi"
+ex "if test ! -e $odir/fastq; then ln -s $fqdir $odir/fastq; fi"
 ex "bash $jdir/CPU/juicer.sh -t $ncore -g $build -d $odir $param \
      -s $enzyme -a $label -p $gt \
      -z $bwaindex -D $jdir -e $fastq_post -S map"

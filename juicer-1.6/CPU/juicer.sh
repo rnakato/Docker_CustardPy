@@ -344,6 +344,7 @@ then
         echo "(-: Created $splitdir and $outputdir."
         filename=$(basename "$i")
         filename=${filename%.*}
+	echo "ln -s ${fastqdir} ${splitdir}/."
 	ln -s ${fastqdir} ${splitdir}/.
     else
         echo -e "---  Using already created files in $splitdir\n"

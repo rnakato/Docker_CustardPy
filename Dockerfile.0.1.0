@@ -48,7 +48,7 @@ RUN wget --quiet https://repo.anaconda.com/archive/Anaconda3-2020.11-Linux-x86_6
 RUN pip install --no-cache-dir numpy pandas scipy matplotlib argparse seaborn \
     && conda install -y r-base \
     && conda install -c r r-ggplot2 r-reshape2
-RUN pip install --no-cache-dir hic-straw phic
+RUN pip install --no-cache-dir hic-straw phic h1d
 
 #RUN R -e "install.packages(c('ggplot2','reshape2','devtools'), repos='https://cran.ism.ac.jp/')"
 

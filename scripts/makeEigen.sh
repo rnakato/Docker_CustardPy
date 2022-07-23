@@ -26,7 +26,6 @@ mkdir -p $dir
 ex(){ echo $1; eval $1; }
 
 getEigen(){
-    h1d basic gd $gene $binsize $gt -o $dir/geneDensity.txt
     h1d one PC1 $matrixdir/Matrix/intrachromosomal/$binsize/observed.$norm.chr$chr.matrix.gz $binsize chr$chr -p $dir/geneDensity.txt -o $dir/eigen.$norm.chr$chr
     cut -f4 $dir/eigen.$norm.chr$chr.bedGraph | sed -e 's/^$/nan/g' > $dir/eigen.$norm.chr$chr.txt
 #    juicertools.sh eigenvector -p $norm $hic chr$chr BP $binsize $dir/eigen.$norm.chr$chr.txt
@@ -61,6 +60,9 @@ toBed12(){
         | sort -k1,1 -k2,2n \
         > $prefix.All.bed12
 }
+
+
+ex "h1d basic gd $gene $binsize $gt -o $dir/geneDensity"
 
 for chr in $chrlist
 do

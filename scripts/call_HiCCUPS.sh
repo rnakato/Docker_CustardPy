@@ -2,10 +2,27 @@
 cmdname=`basename $0`
 function usage()
 {
-    echo "$cmdname <norm> <outputdir> <hic file> <build>" 1>&2
+    echo "$cmdname <norm> <odir> <hic>" 1>&2
+    echo '   <norm>: normalization type (NONE|VC|VC_SQRT|KR|SCALE)' 1>&2
+    echo '   <odir>: output directory (e.g., "JuicerResults/sample1")' 1>&2
+    echo '   <hic>: .hic file' 1>&2
+    echo '   Options:' 1>&2
+    echo '     -r resolutions: the resolutions (default: "5000,10000,25000", should be quoted and separated by comma)' 1>&2
 }
 
-if [ $# -ne 4 ]; then
+resolutions="5000,10000,25000"
+while getopts r: option; do
+    case ${option} in
+        r) resolutions=${OPTARG} ;;
+        *)
+            usage
+            exit 1
+            ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+if [ $# -ne 3 ]; then
   usage
   exit 1
 fi
@@ -21,5 +38,5 @@ juicertool="juicertools.sh"
 
 hicdir=$odir/loops/$norm
 mkdir -p $hicdir
-ex "$juicertool hiccups -r 5000,10000,25000 -k $norm $hic $hicdir"
+ex "$juicertool hiccups -r $resolutions -k $norm $hic $hicdir"
 grep -v \# $hicdir/merged_loops.bedpe | awk '{OFS="\t"} {printf "chr%s\t%d\t%d\tchr%s\t%d\t%d\n", $1, $2, $3, $4, $5, $6 }' > $hicdir/merged_loops.simple.bedpe

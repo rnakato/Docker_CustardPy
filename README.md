@@ -10,7 +10,8 @@ See [CustardPy Manual](https://custardpy.readthedocs.io/en/latest/) for the deta
 
 - The Dockerfile of **CustardPy_Juicer** is based on [aidenlab/juicer](https://hub.docker.com/r/aidenlab/juicer).
 - **CustardPy_Juicer** is the newer version of [docker_juicer](https://github.com/rnakato/docker_juicer).
-- Docker image of **CustardPy_Juicer** is available at [DockerHub](https://hub.docker.com/r/rnakato/custardpy_juicer).
+- [CustardPy_Juicer Docker image at DockerHub](https://hub.docker.com/r/rnakato/custardpy_juicer).
+- [CustardPy Docker image at DockerHub](https://hub.docker.com/r/rnakato/custardpy)
 
 ## Run
 

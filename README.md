@@ -1,5 +1,7 @@
 # Docker_CustardPy
 
+See [CustardPy Manual](https://custardpy.readthedocs.io/en/latest/) for the detailed usage.
+
 ## Docker CustardPy
 
 ## CustardPy_Juicer
@@ -31,10 +33,6 @@ For Singularity:
     singularity build custardpy_juicer.sif docker://rnakato/custardpy_juicer
     # execute a command
     singularity exec [--nv] custardpy_juicer.sif <command>
-
-## Usage
-
-See [CustardPy Manual](https://custardpy.readthedocs.io/en/latest/).
 
 ## Build Docker image from Dockerfile
 First clone and move to the repository

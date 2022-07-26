@@ -1,8 +1,8 @@
 # Docker images for CustardPy
 
-This repository contains the data to build two Docker images, **Docker_CustardPy** and **CustardPy_Juicer**, for CustardPy analysis.
+This repository contains the data to build two Docker images, **Docker_CustardPy** and **CustardPy_Juicer**, for [CustardPy](https://github.com/rnakato/CustardPy) analysis.
 * **Docker_CustardPy** is a docker image for CustardPy analysis. 
-* **CustardPy_Juicer** is a docker image for Juicer analysis in [CustardPy](https://github.com/rnakato/CustardPy). This is a wrapper of [Juicer](https://github.com/aidenlab/juicer/wiki) and internally executes juicertools. See the original website for the full description about each command.
+* **CustardPy_Juicer** is a docker image for Juicer analysis in CustardPy. This is a wrapper of [Juicer](https://github.com/aidenlab/juicer/wiki) and internally executes juicertools. See the original website for the full description about each command.
 
 See [CustardPy Manual](https://custardpy.readthedocs.io/en/latest/) for the detailed usage.
 

@@ -92,10 +92,10 @@ if [ -z $postproc ]; then
        echo "start mapping..."
        tempdir=$idir/temp
        mkdir -p $idir/bam $idir/pairs $tempdir $idir/log
-       bwa mem -5SP -T0 -t $ncore $index $fq1 $fq2 2> $idir/log/bwa.log | samtools sort -@4 > $idir/bam/mapped.bwa.sort.bam
-       echo "parse by pairtools..."
-
-       pairtools parse --min-mapq 30 --walks-policy 5unique --max-inter-align-gap 30 --nproc-in 4 --nproc-out 4 --chroms-path $gt $idir/bam/mapped.bwa.sort.bam \
+    #   bwa mem -5SP -T0 -t $ncore $index $fq1 $fq2 2> $idir/log/bwa.log | samtools sort -@4 > $idir/bam/mapped.bwa.sort.bam
+   #    echo "parse by pairtools..."
+       bwa mem -5SP -T0 -t $ncore $index $fq1 $fq2 2> $idir/log/bwa.log \
+	   | pairtools parse --min-mapq 30 --walks-policy 5unique --max-inter-align-gap 30 --nproc-in 4 --nproc-out 4 --chroms-path $gt \
 	   | pairtools sort --nproc 4 --tmpdir=$tempdir \
 	   | pairtools dedup --nproc-in 4 --nproc-out 4 --mark-dups --output-stats $idir/pairs/mapped.bwa.stats.txt \
 	   | pairtools split --nproc-in 4 --nproc-out 4 --output-pairs $idir/pairs/mapped.bwa.pairs --output-sam - \

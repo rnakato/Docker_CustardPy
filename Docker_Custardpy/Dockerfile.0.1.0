@@ -15,6 +15,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     imagemagick \
     less \
     libcurl4-openssl-dev \
+    libfontconfig1-dev \
+    libfribidi-dev \
+    libharfbuzz-dev \
     liblz4-tool \
     libncurses-dev \
     libssl-dev \
@@ -24,6 +27,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     msttcorefonts \
     r-base \
     r-base-dev \
+    pigz \
     samtools \
     time \
     unzip \
@@ -57,6 +61,8 @@ RUN wget --progress=dot:giga https://repo.anaconda.com/miniconda/Miniconda3-4.7.
     && bash Miniconda3-4.7.12.1-Linux-x86_64.sh -p /miniconda3 -b \
     && rm Miniconda3-4.7.12.1-Linux-x86_64.sh
 ENV PATH=/miniconda3/bin:$PATH
+
+RUN ln -s /usr/lib/x86_64-linux-gnu/libffi.so.7.1.0 /usr/lib/x86_64-linux-gnu/libffi.so.6
 
 RUN conda install -y matplotlib numpy scipy pandas ipython jupyter jupyterlab seaborn cython
 RUN pip install cooltools --no-cache-dir

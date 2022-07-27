@@ -105,7 +105,7 @@ if [ -z $postproc ]; then
 
        rm -rf $tempdir
 
-       bgzip $idir/pairs/mapped.bwa.pairs
+       bgzip -f $idir/pairs/mapped.bwa.pairs
 
        echo "samtools indexing..."
        samtools index $idir/bam/mapped.final.sort.bam
@@ -122,7 +122,7 @@ if [ -z $postproc ]; then
        mkdir -p $idir/pairs $idir/log
        chromap --preset hic -t $ncore --remove-pcr-duplicates -x $index -r $genome -1 $fq1 -2 $fq2 -o $idir/pairs/mapped.rmdup.pairs 2> $idir/log/chromap.rmdup.log
        echo "parse by pairtools..."
-       bgzip $idir/pairs/mapped.rmdup.pairs
+       bgzip -f $idir/pairs/mapped.rmdup.pairs
        pair=$idir/pairs/mapped.rmdup.pairs.gz
     fi
 
@@ -132,7 +132,7 @@ fi
 
 if [ -z $pairs ]; then
     echo "generate .cool file..."
-    custardpy_genCoolHiC $prefix $idir $pair $gt
+###    custardpy_genCoolHiC $prefix $idir $pair $gt
 
     mkdir -p $idir/cool
     pairix $pair

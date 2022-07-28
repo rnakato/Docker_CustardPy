@@ -20,6 +20,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libharfbuzz-dev \
     liblz4-tool \
     libncurses-dev \
+    libncurses5 \
     libssl-dev \
     libxkbcommon-x11-0 \
     libxml2-dev \

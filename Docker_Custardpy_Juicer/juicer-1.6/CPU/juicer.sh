@@ -376,9 +376,9 @@ then
 	if [ -z "$chimeric" ]
         then
         # Align fastq pair
-            echo "bwa mem -SP5M $threadstring $refSeq $name1$ext $name2$ext > $name$ext.sam"
+            echo "bwa mem -SP5M $threadstring $refSeq $name1$ext $name2$ext > $name$ext.sam 2> $name.bwa.log"
 
-            bwa mem -SP5M $threadstring $refSeq $name1$ext $name2$ext > $name$ext.sam
+            bwa mem -SP5M $threadstring $refSeq $name1$ext $name2$ext > $name$ext.sam 2> $name.bwa.log
             if [ $? -ne 0 ]
             then
                 echo "***! Alignment of $name1$ext $name2$ext failed."

@@ -108,6 +108,17 @@ ex "juicer_pigz.sh $odir"
 ex "plot_distance_count.sh $label $odir"
 
 hic=$odir/aligned/inter_30.hic
+
+if test "$gene" = ""; then
+    custardpy_process_hic -n $norm -g $gt $hic $odir
+else
+    custardpy_process_hic -n $norm -g $gt -a $gene $hic $odir
+fi
+
+
+exit
+
+### old
 for resolution in $resolutions
 do
     # Contact matrix

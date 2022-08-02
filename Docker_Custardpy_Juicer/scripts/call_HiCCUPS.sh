@@ -39,4 +39,4 @@ juicertool="juicertools.sh"
 hicdir=$odir/loops/$norm
 mkdir -p $hicdir
 ex "$juicertool hiccups -r $resolutions -k $norm $hic $hicdir"
-grep -v \# $hicdir/merged_loops.bedpe | awk '{OFS="\t"} {printf "chr%s\t%d\t%d\tchr%s\t%d\t%d\n", $1, $2, $3, $4, $5, $6 }' > $hicdir/merged_loops.simple.bedpe
+grep -v \# $hicdir/merged_loops.bedpe | awk '{OFS="\t"} {printf "%s\t%d\t%d\t%s\t%d\t%d\n", $1, $2, $3, $4, $5, $6 }' > $hicdir/merged_loops.simple.bedpe

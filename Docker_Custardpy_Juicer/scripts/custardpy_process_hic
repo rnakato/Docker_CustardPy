@@ -48,7 +48,7 @@ if test "$gt" = ""; then
 fi
 
 if [[ ${odir} =~ ^/.+$ ]]; then
-    $odir=$odir
+    odir=$odir
 else
     odir=$(pwd)/$odir
 fi

@@ -10,11 +10,13 @@ function usage()
     echo "      -n [NONE|VC|VC_SQRT|KR|SCALE] : normalization type (default: SCALE)"
     echo '      -a <refFlat>: gene annotation file' 1>&2
     echo '      -r resolutions : resolutions for 1D metrics calculation (default: "25000 50000 100000", should be quoted and separated by spaces)' 1>&2
+    echo '      -p ncore: number of CPUs (default: 32)' 1>&2
     echo '   Example:' 1>&2
     echo "      $cmdname -g genometable.hg38.txt -a refFlat.hg38.txt Hap1-A/inter_30.hic Hap1-A" 1>&2
 }
 
 gt=""
+ncore=32
 
 norm="SCALE"
 resolutions="25000 50000 100000"
@@ -26,6 +28,7 @@ while getopts g:n:r:a: option; do
 	n) norm=${OPTARG} ;;
 	r) resolutions=${OPTARG} ;;
 	a) gene=${OPTARG} ;;
+        p) ncore=${OPTARG} ;;
         *)
 	    usage
             exit 1
@@ -69,7 +72,7 @@ do
        echo "gene file is not specified. PC1 calculation is skipped."
     else
        echo "calculate PC1.."
-       ex "makeEigen.sh $norm $odir $hic $resolution $gt $gene"
+       ex "makeEigen.sh -p $ncore $norm $odir $hic $resolution $gt $gene"
     fi
 done
 

@@ -22,7 +22,7 @@ norm="SCALE"
 resolutions="25000 50000 100000"
 gene=""
 
-while getopts g:n:r:a: option; do
+while getopts g:n:r:a:p: option; do
     case ${option} in
 	g) gt=${OPTARG} ;;
 	n) norm=${OPTARG} ;;

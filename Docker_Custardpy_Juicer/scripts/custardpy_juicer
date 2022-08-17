@@ -84,13 +84,13 @@ if [ -n "$tmpdir" ]; then
 fi
 
 if [[ ${fqdir} =~ ^/.+$ ]]; then
-    $fqdir=$fqdir
+    fqdir=$fqdir
 else
     fqdir=$(pwd)/$fqdir
 fi
 
 if [[ ${odir} =~ ^/.+$ ]]; then
-    $odir=$odir
+    odir=$odir
 else
     odir=$(pwd)/$odir
 fi

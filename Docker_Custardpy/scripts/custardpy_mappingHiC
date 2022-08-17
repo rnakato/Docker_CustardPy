@@ -93,7 +93,7 @@ if [ -z $postproc ]; then
     logdir=$odir/log
     mkdir -p $odir/bam $odir/pairs $logdir $tempdir
 
-    bwa mem -t $ncore -SP5M $index_bwa $fq1 $fq2 2> $logdir/bwa_mapping | samtools view -Shb - > $odir/bam/mapped.bwa.bam
+    bwa mem -t $ncore -SP5M $index_bwa <(zcat -f $fq1) <(zcat -f $fq2) 2> $logdir/bwa_mapping | samtools view -Shb - > $odir/bam/mapped.bwa.bam
 
     echo "start parsing by pairtools..."
     samtools view -h $odir/bam/mapped.bwa.bam \

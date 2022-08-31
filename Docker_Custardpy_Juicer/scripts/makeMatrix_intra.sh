@@ -50,7 +50,7 @@ do
 	tempfile=$dir/$type.$norm.$chr.txt
         juicertools.sh dump $type $norm $hic $chr $chr BP $binsize $tempfile
 	if test $list = "no" -o -s $tempfile; then
-            convert_JuicerDump_to_dense.py $tempfile $dir/$type.$norm.$chr.matrix.gz $gt $chr $binsize
+            convert_JuicerDump_to_dense.py $tempfile $dir/$type.$norm.$chr.matrix.gz $gt $chr $chr -r $binsize
 	    rm $tempfile
 	fi
     done

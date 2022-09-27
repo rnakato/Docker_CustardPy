@@ -79,21 +79,6 @@ RUN conda install -y matplotlib numpy scipy pandas ipython jupyter jupyterlab se
     && conda install -c conda-forge -c bioconda pairtools hicexplorer \
     && pip install --no-cache-dir cooltools
 
-RUN pip install --no-cache-dir h1d hic-straw phic
-# pastis
-# iced installation tips: https://github.com/scikit-learn/scikit-learn/discussions/21931
-# about "No module named 'numpy.distutils._msvccompiler' in numpy.distutil"
-RUN pip install iced --no-build-isolation --no-cache-dir \
-    && pip install pastis --no-cache-dir \
-# JuiceBox
-    && pip install --no-cache-dir git+https://github.com/igvteam/juicebox-notebook.git \
-# CustardPy
-    && pip install --no-cache-dir -i https://test.pypi.org/simple/ custardpy==0.2.9
-#    && pip install --no-cache-dir custardpy==0.1.0
-
-# installing gawk for juicer
-RUN echo 'alias awk=gawk' >> ~/.bashrc
-
 # HOMER
 RUN mkdir HOMER && cd HOMER \
     && mkdir bin cpp update \
@@ -104,17 +89,6 @@ RUN mkdir HOMER && cd HOMER \
     && perl configureHomer.pl -install mouse-p \
     && perl configureHomer.pl -install zebrafish-o \
     && perl configureHomer.pl -install yeast-o
-
-# wrapper
-COPY Cooler-restriction_sites /Cooler-restriction_sites
-RUN gunzip /Cooler-restriction_sites/*gz
-COPY scripts/ scripts
-RUN chmod +x /opt/scripts/* /opt/scripts/pastis/*
-
-RUN ln -s /opt/pairsqc-*/ /opt/scripts/pairsqc \
-    && ln -s /miniconda3/pkgs/pairix-*/bin/ scripts/pairix
-
-COPY juicer_tools_1.22.01.jar /opt/juicer_tools.jar
 
 # Mango
 RUN R -e "install.packages(c('hash','Rcpp','optparse','readr'))" \
@@ -127,6 +101,32 @@ RUN R -e "install.packages(c('hash','Rcpp','optparse','readr'))" \
 
 # FitHiC%
 
+
+RUN pip install --no-cache-dir h1d hic-straw phic
+# pastis
+# iced installation tips: https://github.com/scikit-learn/scikit-learn/discussions/21931
+# about "No module named 'numpy.distutils._msvccompiler' in numpy.distutil"
+RUN pip install iced --no-build-isolation --no-cache-dir \
+    && pip install pastis --no-cache-dir \
+# JuiceBox
+    && pip install --no-cache-dir git+https://github.com/igvteam/juicebox-notebook.git
+# CustardPy
+#RUN pip install -U --no-cache-dir -i https://test.pypi.org/simple/ custardpy==0.2.11
+RUN pip install --no-cache-dir custardpy==0.1.1
+
+# installing gawk for juicer
+RUN echo 'alias awk=gawk' >> ~/.bashrc
+
+# wrapper
+COPY Cooler-restriction_sites /Cooler-restriction_sites
+RUN gunzip /Cooler-restriction_sites/*gz
+COPY scripts/ scripts
+RUN chmod +x /opt/scripts/* /opt/scripts/pastis/*
+
+RUN ln -s /opt/pairsqc-*/ /opt/scripts/pairsqc \
+    && ln -s /miniconda3/pkgs/pairix-*/bin/ scripts/pairix
+
+COPY juicer_tools_1.22.01.jar /opt/juicer_tools.jar
 
 # set path
 ENV PATH=$PATH:/opt:/opt/bwa-0.7.17:/opt/pairix-0.3.7:/opt/pairsqc-0.2.3:/opt/scripts:/opt/scripts/pastis:/opt/scripts/pairix:/opt/scripts/pairsqc:/opt/HOMER/bin/

@@ -112,7 +112,7 @@ RUN pip install iced --no-build-isolation --no-cache-dir \
     && pip install --no-cache-dir git+https://github.com/igvteam/juicebox-notebook.git
 # CustardPy
 #RUN pip install -U --no-cache-dir -i https://test.pypi.org/simple/ custardpy==0.2.11
-RUN pip install --no-cache-dir custardpy==0.1.1
+RUN pip install --no-cache-dir custardpy==0.0.12
 
 # installing gawk for juicer
 RUN echo 'alias awk=gawk' >> ~/.bashrc

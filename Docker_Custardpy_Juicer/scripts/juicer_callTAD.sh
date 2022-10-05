@@ -17,7 +17,7 @@ ncore=24
 while getopts r:p: option; do
     case ${option} in
         r) resolutions=${OPTARG} ;;
-	p) ncore=${OPTARG} ;;
+        p) ncore=${OPTARG} ;;
         *)
             usage
             exit 1
@@ -45,7 +45,7 @@ for res in $resolutions; do
     fi
 
     # make TAD bed
-    grep -v \# $dir/${res}_blocks.bedpe | awk '{OFS="\t"} NR>1 {printf "%s\t%d\t%d\tTAD%d\n", $1, $2, $3, NR }' > $dir/${res}_blocks.bed
+    grep -v \# $dir/${res}_blocks.bedpe | awk '{OFS="\t"} {printf "%s\t%d\t%d\tTAD%d\n", $1, $2, $3, NR }' > $dir/${res}_blocks.bed
     sort -k1,1 -k2,2n $dir/${res}_blocks.bed | bedtools merge > $dir/${res}_blocks.merged.bed
 
     # bedpe to boundary bed

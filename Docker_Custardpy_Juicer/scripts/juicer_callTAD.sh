@@ -41,7 +41,7 @@ mkdir -p $dir
 
 for res in $resolutions; do
     if test ! -e $dir/${res}_blocks.bedpe; then
-        juicertools.sh arrowhead -m 2000 -r $res --threads $ncore -k $norm $hic $dir
+        juicertools.sh arrowhead -m 2000 -r $res --threads $ncore -k $norm $hic $dir --ignore-sparsity
     fi
 
     # make TAD bed

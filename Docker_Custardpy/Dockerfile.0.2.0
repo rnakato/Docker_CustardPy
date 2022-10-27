@@ -33,7 +33,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     r-base \
     r-base-dev \
     pigz \
-    samtools \
     time \
     unzip \
     vim \
@@ -75,7 +74,7 @@ RUN wget --progress=dot:giga https://repo.anaconda.com/miniconda/Miniconda3-py37
     && bash Miniconda3-py37_4.12.0-Linux-x86_64.sh -p /miniconda3 -b \
     && rm Miniconda3-py37_4.12.0-Linux-x86_64.sh
 RUN conda install -y matplotlib numpy scipy pandas ipython jupyter jupyterlab seaborn cython \
-    && conda install -y -c bioconda hic2cool \
+    && conda install -y -c bioconda hic2cool samtools \
     && conda install -c conda-forge -c bioconda pairtools hicexplorer \
     && pip install --no-cache-dir cooltools
 
@@ -112,7 +111,7 @@ RUN pip install iced --no-build-isolation --no-cache-dir \
     && pip install --no-cache-dir git+https://github.com/igvteam/juicebox-notebook.git
 # CustardPy
 #RUN pip install -U --no-cache-dir -i https://test.pypi.org/simple/ custardpy==0.2.11
-RUN pip install --no-cache-dir custardpy==0.0.12
+RUN pip install --no-cache-dir custardpy==0.0.21
 
 # installing gawk for juicer
 RUN echo 'alias awk=gawk' >> ~/.bashrc

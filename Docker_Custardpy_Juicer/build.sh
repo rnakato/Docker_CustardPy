@@ -1,6 +1,6 @@
 reponame=custardpy_juicer
 
-tag=0.2.0
+tag=0.3.0
 docker build -f Dockerfile.$tag -t rnakato/$reponame:$tag .
 docker push rnakato/$reponame:$tag
 

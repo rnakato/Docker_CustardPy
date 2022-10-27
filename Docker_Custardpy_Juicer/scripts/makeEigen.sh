@@ -83,7 +83,10 @@ toBed12(){
 }
 export -f toBed12
 
-ex "h1d basic gd $gene $binsize $gt -o $dir/geneDensity"
+tmpfile=$(mktemp)
+grep -v geneName $gene > $tmpfile
+ex "h1d basic gd $tmpfile $binsize $gt -o $dir/geneDensity"
+rm $tmpfile
 
 func(){
     chr=$1
@@ -93,9 +96,9 @@ func(){
     matrixdir=$5
     if test $chr != "chrY" -a $chr != "chrM" -a $chr != "chrMT" ; then
        chr=$(echo $chr | sed -e 's/chr//g')
-       if test ! -e $dir/eigen.$norm.chr$chr.txt.gz; then
+#       if test ! -e $dir/eigen.$norm.chr$chr.txt.gz; then
            getEigen
-       fi
+#       fi
        classifyCompartment.py $dir/eigen.$norm.chr$chr.txt.gz $dir/Compartment.$norm.chr$chr chr$chr $binsize
        toBed12 $dir/Compartment.$norm.chr$chr
     fi

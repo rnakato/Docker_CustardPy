@@ -98,17 +98,17 @@ if [ -z $postproc ]; then
 	   | pairtools parse --min-mapq 30 --walks-policy 5unique --max-inter-align-gap 30 --nproc-in 4 --nproc-out 4 --chroms-path $gt \
 	   | pairtools sort --nproc 4 --tmpdir=$tempdir \
 	   | pairtools dedup --nproc-in 4 --nproc-out 4 --mark-dups --output-stats $idir/pairs/mapped.bwa.stats.txt \
-	   | pairtools split --nproc-in 4 --nproc-out 4 --output-pairs $idir/pairs/mapped.bwa.pairs --output-sam - \
-	   | samtools view -bS \
-	   | samtools sort -@$ncore -T $tempdir/temp.bam -o $idir/bam/mapped.final.sort.bam
-       samtools index $idir/bam/mapped.final.sort.bam
-
+	   | pairtools split --nproc-in 4 --nproc-out 4 --output-pairs $idir/pairs/mapped.bwa.pairs
+#	   | pairtools split --nproc-in 4 --nproc-out 4 --output-pairs $idir/pairs/mapped.bwa.pairs --output-sam - \
+#	   | samtools view -bS \
+#	   | samtools sort -@$ncore -T $tempdir/temp.bam -o $idir/bam/mapped.final.sort.bam
+#       samtools index $idir/bam/mapped.final.sort.bam
        rm -rf $tempdir
 
        bgzip -f $idir/pairs/mapped.bwa.pairs
 
-       echo "samtools indexing..."
-       samtools index $idir/bam/mapped.final.sort.bam
+#       echo "samtools indexing..."
+#       samtools index $idir/bam/mapped.final.sort.bam
        get_qc.py -p $idir/pairs/mapped.bwa.stats.txt > $idir/mappingstats.txt
 
        pair=$idir/pairs/mapped.bwa.pairs.gz

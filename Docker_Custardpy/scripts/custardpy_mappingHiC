@@ -93,24 +93,29 @@ if [ -z $postproc ]; then
     logdir=$odir/log
     mkdir -p $odir/bam $odir/pairs $logdir $tempdir
 
-    bwa mem -t $ncore -SP5M $index_bwa <(zcat -f $fq1) <(zcat -f $fq2) 2> $logdir/bwa_mapping | samtools view -Shb - > $odir/bam/mapped.bwa.bam
+#    bwa mem -t $ncore -SP5M $index_bwa <(zcat -f $fq1) <(zcat -f $fq2) 2> $logdir/bwa_mapping | samtools view -Shb - > $odir/bam/mapped.bwa.bam
 
-    echo "start parsing by pairtools..."
-    samtools view -h $odir/bam/mapped.bwa.bam \
-	| pairtools parse --chroms-path $gt --nproc-in 4 --nproc-out 4 --add-columns mapq --min-mapq $qthre \
-	| pairtools sort --nproc 4 --tmpdir=$tempdir --output $odir/pairs/bwa.sam.pairs.gz
-    pairtools dedup --nproc-in 4 --nproc-out 4 --mark-dups --output-dups - --output-unmapped - \
-              --output $odir/pairs/bwa.marked.sam.pairs.gz $odir/pairs/bwa.sam.pairs.gz
+#    echo "start parsing by pairtools..."
+#    samtools view -h $odir/bam/mapped.bwa.bam \
+    bwa mem -t $ncore -SP5M $index_bwa $fq1 $fq2 2> $logdir/bwa_mapping \
+        | pairtools parse --min-mapq $qthre --nproc-in 4 --nproc-out 4 --chroms-path $gt --add-columns mapq \
+        | pairtools sort --nproc 4 --tmpdir=$tempdir \
+        | pairtools dedup --nproc-in 4 --nproc-out 4 --mark-dups --output-dups - --output-unmapped - \
+              --output $odir/pairs/bwa.marked.sam.pairs.gz $odir/pairs/bwa.sam.pairs.gz --output-stats mapped.bwa.stats.txt #--backend cython
+
+#	| pairtools parse --chroms-path $gt --nproc-in 4 --nproc-out 4 --add-columns mapq --min-mapq $qthre \
+#	| pairtools sort --nproc 4 --tmpdir=$tempdir --output $odir/pairs/bwa.sam.pairs.gz
+ ##         pairtools dedup --nproc-in 4 --nproc-out 4 --mark-dups --output-dups - --output-unmapped - \
+#              --output $odir/pairs/bwa.marked.sam.pairs.gz $odir/pairs/bwa.sam.pairs.gz
     pairix -f $odir/pairs/bwa.marked.sam.pairs.gz # sanity check
+
+    echo "start splitting pairsam by pairtools..."
 
     TEMPFILE=$tempdir/temp.gz
     TEMPFILE1=$tempdir/temp1.gz
-
     ## Generate lossless bam
-    #pairtools split --output-sam $odir/bam/bwa.lossless.bam $odir/pairs/bwa.sam.pairs.gz
-
-    echo "start splitting pairsam by pairtools..."
-    # Select UU, UR, RU reads
+    # pairtools split --output-sam $odir/bam/bwa.lossless.bam $odir/pairs/bwa.sam.pairs.gz
+    ## Select UU, UR, RU reads
     pairtools select '(pair_type == "UU") or (pair_type == "UR") or (pair_type == "RU")' \
               --output-rest $odir/pairs/bwa.unmapped.sam.pairs.gz \
               --output ${TEMPFILE} \

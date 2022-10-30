@@ -69,14 +69,15 @@ RUN R CMD javareconf \
 RUN ln -s /usr/lib/x86_64-linux-gnu/libffi.so.7.1.0 /usr/lib/x86_64-linux-gnu/libffi.so.6
 
 ### Python
-#RUN wget --progress=dot:giga https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh \
 RUN wget --progress=dot:giga https://repo.anaconda.com/miniconda/Miniconda3-py37_4.12.0-Linux-x86_64.sh \
     && bash Miniconda3-py37_4.12.0-Linux-x86_64.sh -p /miniconda3 -b \
     && rm Miniconda3-py37_4.12.0-Linux-x86_64.sh
+
 RUN conda install -y matplotlib numpy scipy pandas ipython jupyter jupyterlab seaborn cython \
-    && conda install -y -c bioconda hic2cool samtools \
-    && conda install -c conda-forge -c bioconda pairtools hicexplorer \
-    && pip install --no-cache-dir cooltools
+    && conda install -c conda-forge -c bioconda pairtools=0.3.0 hicexplorer \
+    && conda install -y -c bioconda hic2cool samtools cooltools cooler
+
+#    && pip install --no-cache-dir cooltools
 
 # HOMER
 RUN mkdir HOMER && cd HOMER \

@@ -1,15 +1,15 @@
 #!/bin/bash
 
 printHelpAndExit() {
-    echo "Usage: ${0##*/} [options] -g <gt> -i <index> <fastq1> <fastq2> <prefix>"
+    echo "Usage: ${0##*/} [options] -g <gt> -i <index> -f <genome> <fastq1> <fastq2> <prefix>"
     echo "  fastq1, fastq2: paired-end fastq file"
     echo "  prefix: prefix of output files"
     echo -e "\n  Options:"
     echo "    -S state : steps to be executed [all|pairs|postproc] (default: all)"
     echo "    -t [bwa|chromap] : tool for mapping (default: bwa)"
     echo "    -i index : index of bwa or chromap"
+    echo "    -f genome file : fasta file of the reference genome (original data of the index files)"
     echo "    -g genometable : genome table file (describing the chromosome length)"
-    echo "    -f genome file : genome.fa (only for chromap)"
     echo "    -q qvalue : threshould of mapped fragments (default: 30, for '--min-mapq' of pairtools parse)"
     echo "    -p ncore : number of CPUs (default: 4)"
     echo "    -m max_distance : 8.4 for human, 8.2 for mouse (for pairsqc.py, default: 8.4)"
@@ -75,6 +75,11 @@ if test "$tool" != "bwa" -a "$tool" != "chromap"; then
     exit 0
 fi
 
+if test "$genome" = ""; then
+    echo "Error: specify genome fasta (-f)."
+    exit 0
+fi
+
 fq1=$1
 fq2=$2
 prefix=$3
@@ -89,26 +94,47 @@ if [ -z $postproc ]; then
     fi
 
     if test "$tool" = "bwa"; then
-       echo "start mapping by bwa..."
        tempdir=$idir/temp
-       mkdir -p $idir/bam $idir/pairs $tempdir $idir/log
-       bwa mem -5SP -T0 -t $ncore $index $fq1 $fq2 2> $idir/log/bwa.log \
-	   | pairtools parse --min-mapq 30 --walks-policy 5unique --max-inter-align-gap 30 --nproc-in 4 --nproc-out 4 --chroms-path $gt \
-	   | pairtools sort --nproc 4 --tmpdir=$tempdir \
-	   | pairtools dedup --nproc-in 4 --nproc-out 4 --mark-dups --output-stats $idir/pairs/mapped.bwa.stats.txt \
-	   | pairtools split --nproc-in 4 --nproc-out 4 --output-pairs $idir/pairs/mapped.bwa.pairs --output-sam - \
-	   | samtools view -bS \
-	   | samtools sort -@$ncore -T $tempdir/temp.bam -o $idir/bam/mapped.final.sort.bam
-       samtools index $idir/bam/mapped.final.sort.bam
+       bamdir=$idir/mapfile
+       pairdir=$idir/pairs
+       logdir=$idir/log
+       mkdir -p $bamdir $pairdir $tempdir $logdir $idir/stats
+
+       echo "start mapping by bwa..."
+       bwa mem -5SP -T0 -t $ncore $index $fq1 $fq2 2> $logdir/bwa.log \
+            | samtools view -C - -T $genome \
+            | samtools sort -O cram \
+            > $bamdir/mapped.bwa.sort.cram
+       samtools index $bamdir/mapped.bwa.sort.cram
+
+       echo "pairtools parse..."
+       samtools view -h $bamdir/mapped.bwa.sort.cram \
+           | pairtools parse --nproc-in 4 --nproc-out 4 --min-mapq 30 \
+                       --walks-policy 5unique --max-inter-align-gap 30 --chroms-path $gt\
+                       > $pairdir/mapped.bwa.pairs.raw
+
+       echo "pairtools sort..."
+       pairtools sort --nproc 8 --tmpdir=$tempdir $pairdir/mapped.bwa.pairs.raw > $pairdir/mapped.bwa.sorted.pairs
+       rm $pairdir/mapped.bwa.pairs.raw
+
+       echo "pairtools dedup..."
+       pairtools dedup --nproc-in 4 --nproc-out 4 --mark-dups \
+                 --output-stats $idir/stats/mapped.bwa.stats.txt $pairdir/mapped.bwa.sorted.pairs \
+                 > $pairdir/mapped.bwa.rmdup.pairs
+       get_qc.py -p $idir/stats/mapped.bwa.stats.txt > $idir/stats/mappingstats.txt
+
+       echo "pairtools split..."
+       pairtools split --nproc-in 4 --nproc-out 4 --output-pairs $pairdir/mapped.bwa.final.pairs \
+                 --output-sam - $pairdir/mapped.bwa.rmdup.pairs \
+           | samtools view -C - -T $genome \
+           | samtools sort -O cram \
+           >  $bamdir/mapped.final.sort.cram
+
+       samtools index $bamdir/mapped.final.sort.cram
        rm -rf $tempdir
+       bgzip -f $pairdir/mapped.bwa.final.pairs $pairdir/mapped.bwa.sorted.pairs $pairdir/mapped.bwa.rmdup.pairs
 
-       bgzip -f $idir/pairs/mapped.bwa.pairs
-
-       echo "samtools indexing..."
-       samtools index $idir/bam/mapped.final.sort.bam
-       get_qc.py -p $idir/pairs/mapped.bwa.stats.txt > $idir/mappingstats.txt
-
-       pair=$idir/pairs/mapped.bwa.pairs.gz
+       pair=$pairdir/mapped.bwa.final.pairs.gz
     else
        # chromap
        if test "$genome" = ""; then
@@ -116,11 +142,12 @@ if [ -z $postproc ]; then
 	   exit 0
        fi
        echo "start mapping by chromap..."
-       mkdir -p $idir/pairs $idir/log
-       chromap --preset hic -t $ncore --remove-pcr-duplicates -x $index -r $genome -1 $fq1 -2 $fq2 -o $idir/pairs/mapped.rmdup.pairs 2> $idir/log/chromap.rmdup.log
+       mkdir -p $pairdir $logdir
+       chromap --preset hic -t $ncore --remove-pcr-duplicates -x $index -r $genome -1 $fq1 -2 $fq2 -o $pairdir/mapped.rmdup.pairs 2> $logdir/chromap.rmdup.log
        echo "parse by pairtools..."
-       bgzip -f $idir/pairs/mapped.rmdup.pairs
-       pair=$idir/pairs/mapped.rmdup.pairs.gz
+       bgzip -f $pairdir/mapped.rmdup.pairs
+
+       pair=$pairdir/mapped.rmdup.pairs.gz
     fi
 
     echo "mapping finished!"
@@ -128,15 +155,15 @@ if [ -z $postproc ]; then
 fi
 
 if [ -z $pairs ]; then
-    echo "generate .cool file..."
-###    custardpy_genCoolHiC $prefix $idir $pair $gt
+    logdir=$idir/log
+    mkdir -p $idir/cool $logdir
 
-    mkdir -p $idir/cool $idir/log
+    echo "generate .cool file..."
     pairix $pair
     #python /opt/scripts/pairsqc/pairsqc.py -p $pair -c $gt -tP -s $prefix -O $idir/qc -M $max_distance
     #Rscript /opt/scripts/pairsqc/plot.r $enzymelen $idir/qc_report
-    cooler cload pairix -p $ncore -s $max_split $gt:$binsize_min $pair $idir/cool/$prefix.cool
-    cooler zoomify --balance -p $ncore $idir/cool/$prefix.cool > $idir/log/cooler.balance
+    cooler cload pairix -p $ncore -s $max_split $gt:$binsize_min $pair $idir/cool/$prefix.cool >& $logdir/cooler.cload
+    cooler zoomify --balance -p $ncore $idir/cool/$prefix.cool >& $logdir/cooler.zoomify
     #cooler balance -p $ncore $idir/cool/$prefix.cool
     #run-cool2multirescool.sh -i $idir/cool/$prefix.cool -p $ncore -o $idir/cool/$prefix -u $binsize_multi
 

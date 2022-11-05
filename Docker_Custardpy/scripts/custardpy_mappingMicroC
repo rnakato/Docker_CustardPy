@@ -132,7 +132,9 @@ if [ -z $postproc ]; then
 
        samtools index $bamdir/mapped.final.sort.cram
        rm -rf $tempdir
-       bgzip -f $pairdir/mapped.bwa.final.pairs $pairdir/mapped.bwa.sorted.pairs $pairdir/mapped.bwa.rmdup.pairs
+       bgzip -f $pairdir/mapped.bwa.final.pairs
+       bgzip -f $pairdir/mapped.bwa.sorted.pairs
+       bgzip -f $pairdir/mapped.bwa.rmdup.pairs
 
        pair=$pairdir/mapped.bwa.final.pairs.gz
     else

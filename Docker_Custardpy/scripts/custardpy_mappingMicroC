@@ -93,22 +93,16 @@ if [ -z $postproc ]; then
        exit 0
     fi
 
+    tempdir=$idir/temp
+    bamdir=$idir/mapfile
+    pairdir=$idir/pairs
+    logdir=$idir/log
+
     if test "$tool" = "bwa"; then
-       tempdir=$idir/temp
-       bamdir=$idir/mapfile
-       pairdir=$idir/pairs
-       logdir=$idir/log
        mkdir -p $bamdir $pairdir $tempdir $logdir $idir/stats
 
        echo "start mapping by bwa..."
        bwa mem -5SP -T0 -t $ncore $index $fq1 $fq2 2> $logdir/bwa.log \
-            | samtools view -C - -T $genome \
-            | samtools sort -O cram \
-            > $bamdir/mapped.bwa.sort.cram
-       samtools index $bamdir/mapped.bwa.sort.cram
-
-       echo "pairtools parse..."
-       samtools view -h $bamdir/mapped.bwa.sort.cram \
            | pairtools parse --nproc-in 4 --nproc-out 4 --min-mapq 30 \
                        --walks-policy 5unique --max-inter-align-gap 30 --chroms-path $gt\
                        > $pairdir/mapped.bwa.pairs.raw
@@ -132,9 +126,10 @@ if [ -z $postproc ]; then
 
        samtools index $bamdir/mapped.final.sort.cram
        rm -rf $tempdir
-       bgzip -f $pairdir/mapped.bwa.final.pairs
-       bgzip -f $pairdir/mapped.bwa.sorted.pairs
+#       bgzip -f $pairdir/mapped.bwa.sorted.pairs
+       rm $pairdir/mapped.bwa.sorted.pairs
        bgzip -f $pairdir/mapped.bwa.rmdup.pairs
+       bgzip -f $pairdir/mapped.bwa.final.pairs
 
        pair=$pairdir/mapped.bwa.final.pairs.gz
     else
@@ -143,9 +138,12 @@ if [ -z $postproc ]; then
 	   echo "Error: specify genome file (-f)."
 	   exit 0
        fi
-       echo "start mapping by chromap..."
+
        mkdir -p $pairdir $logdir
-       chromap --preset hic -t $ncore --remove-pcr-duplicates -x $index -r $genome -1 $fq1 -2 $fq2 -o $pairdir/mapped.rmdup.pairs 2> $logdir/chromap.rmdup.log
+       echo "start mapping by chromap..."
+       chromap --preset hic -t $ncore --remove-pcr-duplicates -x $index -r $genome \
+               -1 $fq1 -2 $fq2 -o $pairdir/mapped.rmdup.pairs \
+               2> $logdir/chromap.rmdup.log
        echo "parse by pairtools..."
        bgzip -f $pairdir/mapped.rmdup.pairs
 

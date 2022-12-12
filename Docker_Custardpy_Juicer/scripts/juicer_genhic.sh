@@ -66,9 +66,7 @@ fi
 ex(){ echo $1; eval $1; }
 
 pwd=`pwd`
-ex "mkdir -p $odir"
-if test ! -e $odir/fastq; then ln -s $fqdir $odir/fastq; fi
 ex "bash $jdir/CPU/juicer.sh -t $ncore -g $build -d $odir $param \
      -s $enzyme -a $label -p $gt \
-     -z $bwaindex -D $jdir -e $fastq_post -S map \
-     >& $odir/juicer_map.log"
+     -z $bwaindex -D $jdir -e $fastq_post -S final \
+     >& $odir/juicer_genhic.log"

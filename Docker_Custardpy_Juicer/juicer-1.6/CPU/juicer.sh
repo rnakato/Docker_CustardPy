@@ -506,10 +506,10 @@ then
         fi
     fi
     # POSTPROCESSING
-    if [ -z $rnakato_map ]
-    then
-	${juiceDir}/scripts/common/juicer_postprocessing.sh -j ${juiceDir}/scripts/common/juicer_tools -i ${outputdir}/inter_30.hic -m ${juiceDir}/references/motif -g ${genomeID}
-    fi
+#    if [ -z $rnakato_map ]
+#    then
+#	${juiceDir}/scripts/common/juicer_postprocessing.sh -j ${juiceDir}/scripts/common/juicer_tools -i ${outputdir}/inter_30.hic -m ${juiceDir}/references/motif -g ${genomeID}
+#    fi
 fi
 #CHECK THAT PIPELINE WAS SUCCESSFUL
 export early=$earlyexit

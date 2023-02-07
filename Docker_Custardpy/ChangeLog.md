@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0 (2023-01-26)
+
+	- Update R from 3.6 to 4.2
+	- Add [FitHiC](https://github.com/ay-lab/fithic)
+	- Add [ChIAPop](https://github.com/wh90999/ChIAPoP) for ChIA-PET analysis
+
 ## 0.3.0 (2022-10-28)
 - downgrade pairtools from v1.0.1 to v0.3.0
 

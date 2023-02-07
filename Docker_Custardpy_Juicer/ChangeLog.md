@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.2 (2023-02-07)
+- Change the upper limit of memory in Java from `-Xmx32768m` to `-Xmx128768m`
+
 ## 0.3.1 (2022-12-12)
 - Modify mega.sh to adjust CustardPy_juicer
 - Add juicer_genhic.sh that generates a .hic file from the mapped data

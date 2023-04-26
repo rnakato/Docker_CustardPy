@@ -3,11 +3,11 @@
 
 import numpy as np
 import pandas as pd
-import os
+import matplotlib.pyplot as plt
 import argparse
 import subprocess
 
-def add_compartment(d):
+def add_compartment(d, prefix):
     d["Compartment"] = "NaN"
     st = d["Eigen"].describe().transpose()
 
@@ -21,16 +21,34 @@ def add_compartment(d):
         elif row['Eigen'] >= st["min"]:
             d.loc[i,'Compartment'] = 'Strong B'
 
+    plt.hist(d["Eigen"], bins=50, alpha=0.7, rwidth=0.9)
+    plt.xlabel('PC1')
+    plt.ylabel('Frequency')
+    plt.title('Compartment PC1 distribution')
+#    plt.xlim(-0.02,0.02)
+    plt.axvline(x=np.nanmedian(d["Eigen"]), color='black', linestyle='--')
+    plt.axvline(x=st["25%"], color='blue', linestyle='--')
+    plt.axvline(x=st["75%"], color='red', linestyle='--')
+
+    # グラフの表示
+    plt.savefig(prefix +".PC1distribution.pdf")
+
     return d
 
 def merge_compartmentfiles(prefix, outfile):
-    subprocess.call("grep 'Strong A' " + outfile + " | bedtools merge -d 1 > " + prefix + ".StrongA.bed", shell=True)
-    subprocess.call("grep 'Weak A' "   + outfile + " | bedtools merge -d 1 > " + prefix + ".WeakA.bed", shell=True)
-    subprocess.call("grep 'Weak B' "   + outfile + " | bedtools merge -d 1 > " + prefix + ".WeakB.bed", shell=True)
-    subprocess.call("grep 'Strong B' " + outfile + " | bedtools merge -d 1 > " + prefix + ".StrongB.bed", shell=True)
-    subprocess.call("cat " + prefix + ".StrongA.bed " + prefix + ".WeakA.bed" "| sort -k1,1 -k2,2n | bedtools merge -d 1 > " + prefix + ".A.bed", shell=True)
-    subprocess.call("cat " + prefix + ".StrongB.bed " + prefix + ".WeakB.bed" "| sort -k1,1 -k2,2n | bedtools merge -d 1 > " + prefix + ".B.bed", shell=True)
-    subprocess.call("cat " + prefix + ".WeakA.bed " + prefix + ".WeakB.bed" "| sort -k1,1 -k2,2n | bedtools merge -d 1 > " + prefix + ".Suppressed.bed", shell=True)
+    commands = [
+        f"grep 'Strong A' {outfile} | bedtools merge -d 1 > {prefix}.StrongA.bed",
+        f"grep 'Weak A'   {outfile} | bedtools merge -d 1 > {prefix}.WeakA.bed",
+        f"grep 'Weak B'   {outfile} | bedtools merge -d 1 > {prefix}.WeakB.bed",
+        f"grep 'Strong B' {outfile} | bedtools merge -d 1 > {prefix}.StrongB.bed",
+        f"cat {prefix}.StrongA.bed {prefix}.WeakA.bed | sort -k1,1 -k2,2n | bedtools merge -d 1 > {prefix}.A.bed",
+        f"cat {prefix}.StrongB.bed {prefix}.WeakB.bed | sort -k1,1 -k2,2n | bedtools merge -d 1 > {prefix}.B.bed",
+        f"cat {prefix}.WeakA.bed   {prefix}.WeakB.bed | sort -k1,1 -k2,2n | bedtools merge -d 1 > {prefix}.Suppressed.bed"
+    ]
+
+    for cmd in commands:
+        subprocess.run(cmd, shell=True, check=True)
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -50,7 +68,7 @@ def main():
     df["start"] = [n*resolution for n in list(range(0, df.shape[0]))]
     df["end"] = [n*resolution for n in list(range(1, df.shape[0]+1))]
 
-    df = add_compartment(df)
+    df = add_compartment(df, args.output)
 
     outfile = args.output + ".All.bed"
     df[["chromosome", "start", "end", "Compartment"]].to_csv(outfile, sep="\t", header=False, index=False)

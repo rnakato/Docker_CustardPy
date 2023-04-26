@@ -464,7 +464,7 @@ fi
 #Skip if post-processing only is required
 if [ -z $postproc ]
 then
-    export _JAVA_OPTIONS=-Xmx32384m
+#    export _JAVA_OPTIONS=-Xmx32384m
     export LC_ALL=en_US.UTF-8
     tail -n1 $headfile | awk '{printf"%-1000s\n", $0}' > $outputdir/inter.txt;
     cat $splitdir/*.res.txt | awk -f ${juiceDir}/scripts/common/stats_sub.awk >> $outputdir/inter.txt

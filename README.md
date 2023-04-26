@@ -41,6 +41,10 @@ Then type:
 
     docker build -f Dokerfile.<version> -t <account>/custardpy_juicer .
 
+## Singularity images
+
+Prebuild singularity images (version 3.8.5) are available on our [OneDrive](https://univtokyo-my.sharepoint.com/:f:/g/personal/5389587184_utac_u-tokyo_ac_jp/ElfpRRObSChDgcF_fJhXubsB-g3_LpZFBnhZhuoS7920fQ?e=2hrKKf).
+
 ## Contact
 
 Ryuichiro Nakato: rnakato AT iqb.u-tokyo.ac.jp

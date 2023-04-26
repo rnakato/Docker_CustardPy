@@ -1,7 +1,12 @@
 # Changelog
 
-## 0.4.0 (2023-01-26)
+## 0.4.2 (2023-04-23)
+	-
 
+## 0.4.1 (2023-02-24)
+	- Add `libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-render-util0` libraries to avoid an error 'qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "" even though it was found.'
+
+## 0.4.0 (2023-01-26)
 	- Update R from 3.6 to 4.2
 	- Add [FitHiC](https://github.com/ay-lab/fithic)
 	- Add [ChIAPop](https://github.com/wh90999/ChIAPoP) for ChIA-PET analysis
